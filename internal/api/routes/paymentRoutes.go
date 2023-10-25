@@ -1,8 +1,9 @@
 package routes
 
 import (
+	"tech-challenge-payment/internal/api/handlers"
+
 	"github.com/gin-gonic/gin"
-	"tech-challenge-payment/api/handlers"
 )
 
 func InitPaymentRoutes(r *gin.Engine) {
