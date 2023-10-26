@@ -1,10 +1,16 @@
 package api
 
 import (
+	"fmt"
+	"log"
+
+	config "tech-challenge-payment/config"
 	"tech-challenge-payment/internal/api/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+
+	_ "github.com/lib/pq"
 )
 
 func StartServer() {
@@ -14,13 +20,20 @@ func StartServer() {
 		panic(err)
 	}
 
-	dbURL := viper.GetString("database.url")
-	apiPort := viper.GetInt("api.port")
+	appConfig, err := config.LoadAppConfig()
+	if err != nil {
+		log.Fatal("Erro ao carregar configurações do aplicativo:", err)
+	}
+
+	apiPort := appConfig.API.Port
 
 	r := gin.Default()
 
-	routes.InitPaymentRoutes(r)
+	paymentService := InitServices()
+
+	routes.InitPaymentRoutes(r, paymentService)
 	routes.InitSwaggerRoutes(r)
 
-	r.Run(":" + apiPort)
+	address := fmt.Sprintf(":%d", apiPort)
+	r.Run(address)
 }

@@ -1,15 +1,17 @@
 package routes
 
 import (
-	"tech-challenge-payment/internal/api/handlers"
+	"tech-challenge-payment/internal/payment/handlers"
+	payment "tech-challenge-payment/internal/payment/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-func InitPaymentRoutes(r *gin.Engine) {
+func InitPaymentRoutes(r *gin.Engine, paymentService payment.Service) {
 	pagamento := r.Group("/payment")
 	{
-		pagamento.GET("/", handlers.GetPayment)
-		pagamento.POST("/", handlers.CreatePayment)
+		pagamento.POST("/qrcode", func(c *gin.Context) {
+			handlers.GeneratePaymentCode(c, paymentService)
+		})
 	}
 }

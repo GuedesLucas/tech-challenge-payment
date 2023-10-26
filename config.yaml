@@ -3,4 +3,8 @@ server:
   port: 7575
 
 database:
-  url: postgres://usuario:senha@localhost:5432/payment_mock
+  host: localhost
+  port: 5432
+  user: myuser
+  password: mypassword
+  name: mydatabase
