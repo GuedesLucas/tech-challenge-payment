@@ -25,12 +25,12 @@ func (r *paymentRepository) CreatePayment(paymentID string, paymentData types.Pa
 	return nil
 }
 
-func (r *paymentRepository) GetPayment(paymentID string) (types.Payment, error) {
-	var payment types.Payment
+func (r *paymentRepository) GetPayment(paymentID string) (types.PaymentData, error) {
+	var payment types.PaymentData
 	err := r.db.QueryRow("SELECT payment_id, order_id, amount, payment_time FROM payments WHERE payment_id = $1", paymentID).
-		Scan(&payment.ID, &payment.PaymentData.OrderID, &payment.PaymentData.Amount, &payment.PaymentTime)
+		Scan(&payment.ID, &payment.OrderID, &payment.Amount, &payment.PaymentTime)
 	if err != nil {
-		return types.Payment{}, err
+		return types.PaymentData{}, err
 	}
 
 	return payment, nil
@@ -55,4 +55,12 @@ func (r *paymentRepository) GetPaymentByOrderID(orderID string, timeThreshold ti
 	}
 
 	return "", ErrPaymentNotFound
+}
+
+func (r *paymentRepository) SavePaymentStatus(paymentID string, status string) error {
+	_, err := r.db.Exec("UPDATE Payment SET status = $1 WHERE id = $2", status, paymentID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -7,4 +7,5 @@ type Payment struct {
 	OrderID     string    `json:"order_id"`
 	Amount      float64   `json:"amount"`
 	PaymentTime time.Time `json:"payment_time"`
+	Status      string    `json:"status"`
 }

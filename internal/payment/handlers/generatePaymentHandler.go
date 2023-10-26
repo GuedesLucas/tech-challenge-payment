@@ -7,19 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
+	"github.com/google/uuid"
 )
 
-// GeneratePaymentCode recebe uma solicitação HTTP para gerar um código de pagamento.
-// @Summary Gera um código de pagamento.
-// @Description Gera um código de pagamento com base nos dados fornecidos.
-// @Tags Payment
-// @Accept json
-// @Produce json
-// @Param request body GeneratePaymentCodeRequest true "Dados para gerar o código de pagamento"
-// @Success 200 {object} PaymentCodeResponse "ID do pagamento gerado com sucesso"
-// @Failure 400 {object} ErrorResponse "Requisição inválida"
-// @Failure 500 {object} ErrorResponse "Erro interno ao gerar o código de pagamento"
-// @Router /payment/generate [post]
 func GeneratePaymentCode(c *gin.Context, paymentService payment.Service) {
 	var request types.PaymentData
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -40,4 +30,42 @@ func GeneratePaymentCode(c *gin.Context, paymentService payment.Service) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"payment_id": paymentID})
+}
+
+func Payment(c *gin.Context, paymentService payment.Service) {
+	var request types.Payment
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	validate := validator.New()
+	if err := validate.Struct(request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	paymentID, err := paymentService.Payment(request)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Fail to generate the payment"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": paymentID})
+}
+
+func GetPayment(c *gin.Context, paymentID string, paymentService payment.Service) {
+	_, err := uuid.Parse(paymentID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID de pagamento inválido"})
+		return
+	}
+
+	payment, err := paymentService.GetPayment(paymentID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Pagamento não encontrado"})
+		return
+	}
+
+	c.JSON(http.StatusOK, payment)
 }

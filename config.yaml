@@ -1,10 +1,13 @@
-# config.yaml
 server:
-  port: 7575
+  port: ${SERVER_PORT}
 
 database:
-  host: localhost
-  port: 5432
-  user: myuser
-  password: mypassword
-  name: mydatabase
+  host: ${DB_HOST}
+  port: ${DB_PORT}
+  user: ${DB_USER}
+  password: ${DB_PASSWORD}
+  name: ${DB_NAME}
+
+webhook:
+  baseUrl: ${WEBHOOK_URL}
+  path: ${WEBHOOK_PATH}

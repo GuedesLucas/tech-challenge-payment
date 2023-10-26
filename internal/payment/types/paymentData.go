@@ -11,6 +11,7 @@ type PaymentData struct {
 	OrderID     string    `json:"order_id" validate:"required"`
 	Amount      float64   `json:"amount" validate:"required,gt=0"`
 	PaymentTime time.Time `json:"payment_time"`
+	Status      string    `json:"status"`
 }
 
 func NewPaymentData(orderID string, amount float64) (*PaymentData, error) {
