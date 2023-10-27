@@ -1,13 +1,14 @@
 server:
-  port: ${SERVER_PORT}
+  port: 7575
 
 database:
-  host: ${DB_HOST}
-  port: ${DB_PORT}
-  user: ${DB_USER}
-  password: ${DB_PASSWORD}
-  name: ${DB_NAME}
+  host: localhost
+  port: 5432
+  user: techchallenge
+  password: 123456
+  name: tech_payment
+  networks: postgres-network
 
 webhook:
-  baseUrl: ${WEBHOOK_URL}
-  path: ${WEBHOOK_PATH}
+  baseUrl: localhost:8080
+  path: /payment

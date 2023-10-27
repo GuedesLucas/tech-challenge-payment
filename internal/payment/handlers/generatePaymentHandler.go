@@ -10,16 +10,17 @@ import (
 	"github.com/google/uuid"
 )
 
-// @Summary Generate a payment code.
-// @Description Generate a payment code based on the provided data.
-// @Tags Payment
-// @Accept json
-// @Produce json
-// @Param request body PaymentData true "Data for generating the payment code"
-// @Success 200 {object} PaymentCodeResponse "ID of the successfully generated payment"
-// @Failure 400 {object} ErrorResponse "Invalid request"
-// @Failure 500 {object} ErrorResponse "Internal error generating the payment code"
-// @Router /payment/generate [post]
+// Payment godoc
+//	@Summary		Generate a payment code.
+//	@Description	Generate a payment code based on the provided data.
+//	@Tags			Payment
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		PaymentData			true	"Data for generating the payment code"
+//	@Success		200		{object}	PaymentCodeResponse	"ID of the successfully generated payment"
+//	@Failure		400		{object}	ErrorResponse		"Invalid request"
+//	@Failure		500		{object}	ErrorResponse		"Internal error generating the payment code"
+//	@Router			/payment/generate [post]
 func GeneratePaymentCode(c *gin.Context, paymentService payment.Service) {
 	var request types.PaymentData
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -42,16 +43,17 @@ func GeneratePaymentCode(c *gin.Context, paymentService payment.Service) {
 	c.JSON(http.StatusOK, gin.H{"payment_id": paymentID})
 }
 
-// @Summary Process a payment.
-// @Description Process a payment using the provided payment data.
-// @Tags Payment
-// @Accept json
-// @Produce json
-// @Param request body Payment true "Payment data for processing"
-// @Success 200 {object} PaymentStatusResponse "Payment status"
-// @Failure 400 {object} ErrorResponse "Invalid request"
-// @Failure 500 {object} ErrorResponse "Internal error processing the payment"
-// @Router /payment/process [post]
+// Payment godoc
+//	@Summary		Process a payment.
+//	@Description	Process a payment using the provided payment data.
+//	@Tags			Payment
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		Payment					true	"Payment data for processing"
+//	@Success		200		{object}	PaymentStatusResponse	"Payment status"
+//	@Failure		400		{object}	ErrorResponse			"Invalid request"
+//	@Failure		500		{object}	ErrorResponse			"Internal error processing the payment"
+//	@Router			/payment/process [post]
 func Payment(c *gin.Context, paymentService payment.Service) {
 	var request types.Payment
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -74,16 +76,17 @@ func Payment(c *gin.Context, paymentService payment.Service) {
 	c.JSON(http.StatusOK, gin.H{"status": paymentID})
 }
 
-// @Summary Get payment details.
-// @Description Get payment details by ID.
-// @Tags Payment
-// @Accept json
-// @Produce json
-// @Param id path string true "Payment ID"
-// @Success 200 {object} Payment "Payment details"
-// @Failure 400 {object} ErrorResponse "Invalid payment ID"
-// @Failure 404 {object} ErrorResponse "Payment not found"
-// @Router /payment/{id} [get]
+// Payment godoc
+//	@Summary		Get payment details.
+//	@Description	Get payment details by ID.
+//	@Tags			Payment
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		string			true	"Payment ID"
+//	@Success		200	{object}	Payment			"Payment details"
+//	@Failure		400	{object}	ErrorResponse	"Invalid payment ID"
+//	@Failure		404	{object}	ErrorResponse	"Payment not found"
+//	@Router			/payment/{id} [get]
 func GetPayment(c *gin.Context, paymentID string, paymentService payment.Service) {
 	_, err := uuid.Parse(paymentID)
 	if err != nil {

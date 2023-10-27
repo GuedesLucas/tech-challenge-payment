@@ -6,7 +6,7 @@ database:
   port: ${DB_PORT}
   user: ${DB_USER}
   password: ${DB_PASSWORD}
-  name: ${DB_NAME}
+  name: tech_payment
 
 webhook:
   baseUrl: ${WEBHOOK_URL}

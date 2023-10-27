@@ -1,15 +1,14 @@
 package payment
 
 import (
-	"database/sql"
 	"fmt"
 	paymentRepository "tech-challenge-payment/internal/payment/repositories"
 	"tech-challenge-payment/internal/payment/types"
 	"tech-challenge-payment/internal/utils"
 	api "tech-challenge-payment/pkg/api"
-	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Service interface {
@@ -22,7 +21,7 @@ type paymentService struct {
 	repository paymentRepository.PaymentRepository
 }
 
-func NewPaymentService(db *sql.DB) Service {
+func NewPaymentService(db *gorm.DB) Service {
 	repo := paymentRepository.NewPaymentRepository(db)
 	return &paymentService{
 		repository: repo,
@@ -31,14 +30,12 @@ func NewPaymentService(db *sql.DB) Service {
 
 func (s *paymentService) GeneratePayment(paymentData types.PaymentData) (string, error) {
 
-	existingPaymentID, err := s.repository.GetPaymentByOrderID(paymentData.OrderID, 5*time.Minute)
-	if err != nil {
-		return "", err
+	existingPaymentID, _ := s.repository.GetPayment(paymentData.OrderID)
+
+	if existingPaymentID != (types.PaymentData{}) {
+		return existingPaymentID.ID, nil
 	}
 
-	if existingPaymentID != "" {
-		return existingPaymentID, nil
-	}
 	paymentData.Status = "waiting"
 
 	paymentID := uuid.New().String()
@@ -51,7 +48,12 @@ func (s *paymentService) GeneratePayment(paymentData types.PaymentData) (string,
 
 // GetPayment implements Service.
 func (s *paymentService) GetPayment(paymentID string) (types.PaymentData, error) {
-	panic("unimplemented")
+	existingPaymentID, err := s.repository.GetPayment(paymentID)
+	if err != nil {
+		return types.PaymentData{}, err
+	}
+
+	return existingPaymentID, nil
 }
 
 func (s *paymentService) Payment(payData types.Payment) (string, error) {

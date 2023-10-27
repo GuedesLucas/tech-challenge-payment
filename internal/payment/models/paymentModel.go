@@ -1,11 +1,27 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"tech-challenge-payment/internal/payment/types"
+
+	"github.com/google/uuid"
+)
 
 type Payment struct {
-	ID          string    `json:"id"`
-	OrderID     string    `json:"order_id"`
-	Amount      float64   `json:"amount"`
-	PaymentTime time.Time `json:"payment_time"`
-	Status      string    `json:"status"`
+	ID          uuid.UUID `gorm:"primaryKey;type:uuid"`
+	OrderID     string
+	Amount      float64
+	PaymentTime time.Time
+	Status      string
+}
+
+func ToPaymentDTO(model Payment) types.PaymentData {
+	return types.PaymentData{
+		ID:          model.ID.String(),
+		OrderID:     model.OrderID,
+		Amount:      model.Amount,
+		PaymentTime: model.PaymentTime,
+		Status:      model.Status,
+	}
 }

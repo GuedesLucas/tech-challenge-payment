@@ -4,6 +4,12 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build -o myapp
+RUN go build -o main
 
-CMD ["./myapp"]
+FROM scratch
+
+COPY --from=builder /app/main /main
+
+EXPOSE 7575
+
+CMD ["/main"]

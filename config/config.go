@@ -12,7 +12,13 @@ type APIConfig struct {
 	Port int `yaml:"port"`
 }
 
+type WebhookConfig struct {
+	BaseURL string `mapstructure:"baseUrl"`
+	Path    string `mapstructure:"path"`
+}
+
 type AppConfig struct {
 	Database DatabaseConfig `yaml:"database"`
-	API      APIConfig      `yaml:"api"`
+	Server   APIConfig      `yaml:"server"`
+	Webhook  WebhookConfig  `yaml:"webhook"`
 }
