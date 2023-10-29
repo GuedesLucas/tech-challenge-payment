@@ -1,14 +1,13 @@
 server:
-  port: 7575
+  port: 8080
 
 database:
-  host: localhost
+  host: 172.18.0.1
   port: 5432
+  name: tech_payment
   user: techchallenge
   password: 123456
-  name: tech_payment
-  networks: postgres-network
 
 webhook:
   baseUrl: localhost:8080
-  path: /payment
+  path: /pagamento/webhook/

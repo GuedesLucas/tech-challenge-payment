@@ -1,15 +1,22 @@
-FROM golang:1.21
+FROM golang:1.21 AS builder
 
-WORKDIR /app
-
+WORKDIR /go/src/app
 COPY . .
 
-RUN go build -o main
+COPY .env .env
 
-FROM scratch
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./main.go
 
-COPY --from=builder /app/main /main
+FROM alpine:latest
 
-EXPOSE 7575
+RUN apk --no-cache add ca-certificates
 
-CMD ["/main"]
+WORKDIR /root/
+COPY --from=builder /go/src/app/main .
+
+COPY --from=builder /go/src/app/.env .env
+
+EXPOSE 8080
+
+CMD ["./main"]

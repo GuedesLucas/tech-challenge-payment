@@ -8,7 +8,6 @@ import (
 	"tech-challenge-payment/internal/api/routes"
 
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 
 	_ "github.com/lib/pq"
 )
@@ -25,12 +24,6 @@ import (
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func StartServer() {
-	viper.SetConfigFile("config.yaml")
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
-
 	appConfig, err := config.LoadAppConfig()
 	if err != nil {
 		log.Fatal("Erro ao carregar configurações do aplicativo:", err)

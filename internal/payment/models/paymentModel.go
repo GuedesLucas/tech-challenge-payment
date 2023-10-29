@@ -10,7 +10,7 @@ import (
 
 type Payment struct {
 	ID          uuid.UUID `gorm:"primaryKey;type:uuid"`
-	OrderID     string
+	OrderID     int64
 	Amount      float64
 	PaymentTime time.Time
 	Status      string

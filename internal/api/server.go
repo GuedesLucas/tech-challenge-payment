@@ -17,7 +17,7 @@ func InitServices() payment.Service {
 		log.Fatal("Erro ao inicializar o banco de dados:", err)
 	}
 
-	paymentService := payment.NewPaymentService(db)
+	paymentService := payment.NewPaymentService(db, appConfig)
 
 	return paymentService
 }

@@ -36,7 +36,7 @@ func (r *paymentRepository) CreatePayment(paymentID string, paymentData types.Pa
 	return nil
 }
 
-func (r *paymentRepository) GetPayment(paymentID string) (types.PaymentData, error) {
+func (r *paymentRepository) GetPaymentByPaymentID(paymentID string) (types.PaymentData, error) {
 	var payment models.Payment
 	if err := r.db.Where("id = ?", paymentID).First(&payment).Error; err != nil {
 		return types.PaymentData{}, err
@@ -45,10 +45,10 @@ func (r *paymentRepository) GetPayment(paymentID string) (types.PaymentData, err
 	return models.ToPaymentDTO(payment), nil
 }
 
-func (r *paymentRepository) GetPaymentByOrderID(orderID string, timeThreshold time.Duration) (string, error) {
+func (r *paymentRepository) GetPaymentByOrderID(orderID int64, timeThreshold time.Duration) (string, error) {
 	currentTime := time.Now()
 	var payment models.Payment
-	if err := r.db.Where("order_id = ? AND payment_time >= ?", orderID, currentTime.Add(-timeThreshold)).First(&payment).Error; err != nil {
+	if err := r.db.Where("order_id = ? AND payment_time >= ? AND status != 'fail'", orderID, currentTime.Add(-timeThreshold)).First(&payment).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return "", ErrPaymentNotFound
 		}
