@@ -72,6 +72,7 @@ func (s *paymentService) Payment(payData types.Payment) (string, error) {
 	if err := s.repository.SavePaymentStatus(existingPaymentID.ID, r); err != nil {
 		return "internal_failure", err
 	}
+
 	s.WebHook(existingPaymentID.ID)
 
 	return r, nil
@@ -80,10 +81,13 @@ func (s *paymentService) Payment(payData types.Payment) (string, error) {
 func (s *paymentService) WebHook(paymentID string) string {
 	apiClient := api.NewAPIClient(s.appConfig.Webhook.BaseURL)
 	path := s.appConfig.Webhook.Path + paymentID
+	emptyBody := []byte("{}")
 
-	_, err := apiClient.MakeRequest("GET", path, nil, nil, nil)
+	_, err := apiClient.MakeRequest("GET", path, nil, nil, emptyBody)
 	if err != nil {
 		fmt.Printf("Erro ao fazer a chamada GET: %v\n", err)
+		return "erro"
 	}
+
 	return "ok"
 }
