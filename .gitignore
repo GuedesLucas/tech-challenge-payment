@@ -19,3 +19,4 @@
 .vscode
 # Go workspace file
 go.work
+main
